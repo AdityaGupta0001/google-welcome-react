@@ -2,14 +2,13 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import LoginButton from "../components/LoginButton";
-import { getAuthState, initGoogleAuth } from "../services/authService";
+import { getAuthState } from "../services/authService";
 
 const Index = () => {
   const navigate = useNavigate();
   const { isAuthenticated } = getAuthState();
 
   useEffect(() => {
-    initGoogleAuth();
     if (isAuthenticated) {
       navigate("/dashboard");
     }

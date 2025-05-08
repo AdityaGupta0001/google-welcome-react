@@ -9,17 +9,10 @@ import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
 import Navbar from "./components/Navbar";
 import ProtectedRoute from "./components/ProtectedRoute";
-import { useEffect } from "react";
-import { initGoogleAuth } from "./services/authService";
 
 const queryClient = new QueryClient();
 
 const App = () => {
-  useEffect(() => {
-    // Initialize Google OAuth on app load
-    initGoogleAuth();
-  }, []);
-
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>

@@ -1,8 +1,4 @@
 
-// Google OAuth configuration
-const CLIENT_ID = "YOUR_GOOGLE_CLIENT_ID"; // Replace with your actual Google Client ID
-const REDIRECT_URI = window.location.origin;
-
 // Auth state
 interface AuthState {
   isAuthenticated: boolean;
@@ -23,7 +19,6 @@ const loadAuthState = (): AuthState => {
   if (savedAuth) {
     try {
       const parsedAuth = JSON.parse(savedAuth);
-      // Check if token is expired (simplified)
       return parsedAuth;
     } catch (e) {
       // Invalid saved state
@@ -43,46 +38,11 @@ export const getAuthState = (): AuthState => {
   return loadAuthState();
 };
 
-// Initialize Google OAuth
-export const initGoogleAuth = (): void => {
-  const script = document.createElement("script");
-  script.src = "https://accounts.google.com/gsi/client";
-  script.async = true;
-  script.defer = true;
-  document.body.appendChild(script);
-  
-  window.addEventListener("load", () => {
-    if (window.google?.accounts) {
-      console.log("Google Identity Services SDK loaded");
-    }
-  });
-};
-
-// Handle Google OAuth login
-export const loginWithGoogle = (): void => {
-  if (!window.google) {
-    console.error("Google Identity Services SDK not loaded");
-    return;
-  }
-  
-  window.google.accounts.id.initialize({
-    client_id: CLIENT_ID,
-    callback: handleCredentialResponse,
-    auto_select: false,
-    cancel_on_tap_outside: true,
-  });
-  
-  window.google.accounts.id.renderButton(
-    document.getElementById("googleButton")!,
-    { theme: "outline", size: "large", width: 240 }
-  );
-  
-  window.google.accounts.id.prompt();
-};
+// No need for initGoogleAuth as @react-oauth/google handles it
 
 // Handle Google OAuth response
-const handleCredentialResponse = (response: any): void => {
-  const token = response.credential;
+export const handleGoogleLogin = (credentialResponse: any): void => {
+  const token = credentialResponse.credential;
   
   // Decode the JWT to get user info
   const payload = decodeJwtPayload(token);
@@ -126,17 +86,12 @@ export const logout = (): void => {
   window.location.href = "/";
 };
 
-// Type declaration for Google Identity Services
-declare global {
-  interface Window {
-    google?: {
-      accounts: {
-        id: {
-          initialize: (config: any) => void;
-          renderButton: (element: HTMLElement, options: any) => void;
-          prompt: () => void;
-        };
-      };
-    };
-  }
-}
+// Legacy function to maintain compatibility with existing code
+export const initGoogleAuth = (): void => {
+  console.log("Google Identity Services SDK is now managed by @react-oauth/google");
+};
+
+// Legacy function to maintain compatibility with existing code
+export const loginWithGoogle = (): void => {
+  console.log("Google login is now managed by @react-oauth/google");
+};
